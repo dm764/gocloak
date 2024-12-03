@@ -74,7 +74,7 @@ func (g *GoCloak) compareVersions(v, token string, ctx context.Context) (int, er
 		curVersion = curV
 	}
 
-	curVersion = "v" + g.Config.version
+	curVersion = "v" + curVersion
 	if v[0] != 'v' {
 		v = "v" + v
 	}
@@ -356,11 +356,14 @@ func (g *GoCloak) GetServerInfo(ctx context.Context, accessToken string) (*Serve
 }
 
 // GetUserInfo calls the UserInfo endpoint
-func (g *GoCloak) GetUserInfo(ctx context.Context, accessToken, realm string) (*UserInfo, error) {
+func (g *GoCloak) GetUserInfo(ctx context.Context, accessToken, realm, scopeID string) (*UserInfo, error) {
 	const errMessage = "could not get user info"
 
 	var result UserInfo
 	resp, err := g.GetRequestWithBearerAuth(ctx, accessToken).
+		SetFormData(map[string]string{
+			"scope": scopeID,
+		}).
 		SetResult(&result).
 		Get(g.getRealmURL(realm, g.Config.openIDConnect, "userinfo"))
 
@@ -372,11 +375,14 @@ func (g *GoCloak) GetUserInfo(ctx context.Context, accessToken, realm string) (*
 }
 
 // GetRawUserInfo calls the UserInfo endpoint and returns a raw json object
-func (g *GoCloak) GetRawUserInfo(ctx context.Context, accessToken, realm string) (map[string]interface{}, error) {
+func (g *GoCloak) GetRawUserInfo(ctx context.Context, accessToken, realm, scopeID string) (map[string]interface{}, error) {
 	const errMessage = "could not get user info"
 
 	var result map[string]interface{}
 	resp, err := g.GetRequestWithBearerAuth(ctx, accessToken).
+		SetFormData(map[string]string{
+			"scope": scopeID,
+		}).
 		SetResult(&result).
 		Get(g.getRealmURL(realm, g.Config.openIDConnect, "userinfo"))
 

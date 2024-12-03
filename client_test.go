@@ -9,7 +9,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"math/rand"
 	"net/http"
 	"net/url"
@@ -634,6 +633,7 @@ func Test_GetUserInfo(t *testing.T) {
 		context.Background(),
 		token.AccessToken,
 		cfg.GoCloak.Realm,
+		token.Scope,
 	)
 	require.NoError(t, err, "Failed to fetch userinfo")
 	t.Log(userInfo)
@@ -641,7 +641,8 @@ func Test_GetUserInfo(t *testing.T) {
 	_, err = client.GetUserInfo(
 		context.Background(),
 		token.AccessToken,
-		cfg.GoCloak.Realm)
+		cfg.GoCloak.Realm,
+		token.Scope)
 	require.Error(t, err, "")
 }
 
@@ -655,6 +656,7 @@ func Test_GetRawUserInfo(t *testing.T) {
 		context.Background(),
 		token.AccessToken,
 		cfg.GoCloak.Realm,
+		token.Scope,
 	)
 	require.NoError(t, err, "Failed to fetch userinfo")
 	t.Log(userInfo)
@@ -964,7 +966,7 @@ func Test_LoginSignedJWT(t *testing.T) {
 	defer func() {
 		require.NoError(t, f.Close())
 	}()
-	pfxData, err := ioutil.ReadAll(f)
+	pfxData, err := io.ReadAll(f)
 	require.NoError(t, err)
 	pKey, cert, err := pkcs12.Decode(pfxData, "secret")
 	require.NoError(t, err)

@@ -30,9 +30,9 @@ type GoCloakIface interface {
 	// GetServerInfo fetches the server info.
 	GetServerInfo(ctx context.Context, accessToken string) (*ServerInfoRepresentation, error)
 	// GetUserInfo calls the UserInfo endpoint
-	GetUserInfo(ctx context.Context, accessToken, realm string) (*UserInfo, error)
+	GetUserInfo(ctx context.Context, accessToken, realm, scopeID string) (*UserInfo, error)
 	// GetRawUserInfo calls the UserInfo endpoint and returns a raw json object
-	GetRawUserInfo(ctx context.Context, accessToken, realm string) (map[string]interface{}, error)
+	GetRawUserInfo(ctx context.Context, accessToken, realm, scopeID string) (map[string]interface{}, error)
 	// GetCerts fetches certificates for the given realm from the public /open-id-connect/certs endpoint
 	GetCerts(ctx context.Context, realm string) (*CertResponse, error)
 	// GetIssuer gets the issuer of the given realm
